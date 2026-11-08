@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "id": "todoist-mcp",
+  "kind": "provider-connector",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "title": "Todoist MCP server",
+  "description": "Triage project tasks and capture an approved follow-up. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "product": "pipmcp",
+  "appSlug": "todoist",
+  "appName": "Todoist",
+  "operationIds": [
+    "list_projects",
+    "list_tasks",
+    "create_task"
+  ],
+  "sourceRevision": "3fdd8f93cbd0e69b98f703d7dcaf91a2bf4e661e07a7f7ae236b0566bf049353",
+  "evidence": [
+    "Actual tools/call and direct-provider request contract tests"
+  ],
+  "provenance": [
+    "https://developer.todoist.com/api/v1/"
+  ],
+  "attributionSlug": "github-todoist-mcp",
+  "connectorId": "todoist",
+  "connector": {
+    "id": "todoist",
+    "appSlug": "todoist",
+    "name": "Todoist",
+    "version": "0.2.0",
+    "baseUrl": "https://api.todoist.com/api/v1",
+    "auth": {
+      "type": "bearer",
+      "env": "TODOIST_API_TOKEN"
+    },
+    "tools": [
+      {
+        "name": "list_projects",
+        "description": "List projects.",
+        "method": "GET",
+        "path": "/projects",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "cursor": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {
+            "limit": "limit",
+            "cursor": "cursor"
+          },
+          "body": {}
+        },
+        "sampleArguments": {
+          "limit": 10
+        },
+        "pagination": {
+          "type": "cursor",
+          "cursorInput": "cursor",
+          "nextCursorPath": "next_cursor"
+        },
+        "provenance": [
+          "https://developer.todoist.com/api/v1/"
+        ],
+        "approvalRequired": false,
+        "evidence": {
+          "providerLiveValidation": "not-run",
+          "localValidation": "provider-request-fixture"
+        }
+      },
+      {
+        "name": "list_tasks",
+        "description": "List tasks.",
+        "method": "GET",
+        "path": "/tasks",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "project_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            },
+            "cursor": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {
+            "project_id": "project_id",
+            "limit": "limit",
+            "cursor": "cursor"
+          },
+          "body": {}
+        },
+        "sampleArguments": {
+          "limit": 10
+        },
+        "pagination": {
+          "type": "cursor",
+          "cursorInput": "cursor",
+          "nextCursorPath": "next_cursor"
+        },
+        "provenance": [
+          "https://developer.todoist.com/api/v1/"
+        ],
+        "approvalRequired": false,
+        "evidence": {
+          "providerLiveValidation": "not-run",
+          "localValidation": "provider-request-fixture"
+        }
+      },
+      {
+        "name": "create_task",
+        "description": "Create task.",
+        "method": "POST",
+        "path": "/tasks",
+        "readOnly": false,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            },
+            "project_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048,
+              "description": "Value"
+            }
+          },
+          "required": [
+            "content"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {
+            "content": "content",
+            "project_id": "project_id",
+            "description": "description"
+          }
+        },
+        "sampleArguments": {
+          "content": "Reviewed follow-up"
+        },
+        "provenance": [
+          "https://developer.todoist.com/api/v1/"
+        ],
+        "approvalRequired": true,
+        "evidence": {
+          "providerLiveValidation": "not-run",
+          "localValidation": "provider-request-fixture"
+        }
+      }
+    ],
+    "workflow": {
+      "name": "Triage project tasks and capture an approved follow-up",
+      "description": "Triage project tasks and capture an approved follow-up. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+      "steps": [
+        "list_projects",
+        "list_tasks",
+        "create_task"
+      ]
+    },
+    "provenance": [
+      "https://developer.todoist.com/api/v1/"
+    ],
+    "verification": "mock-only",
+    "providerLiveValidation": "not-run",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "list_projects",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "list_tasks",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "create_task",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "list_projects",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "list_tasks",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "create_task",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "repoId": "todoist-mcp",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "3fdd8f93cbd0e69b98f703d7dcaf91a2bf4e661e07a7f7ae236b0566bf049353",
+    "managedAvailability": {
+      "status": "listed",
+      "checkedAt": "2026-11-08T13:20:45.156456+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "list_projects",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "list_tasks",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "create_task",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "list_projects",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "list_tasks",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "create_task",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Triage project tasks and capture an approved follow-up. Read provider data first, then explicitly approve the selected change with operator write opt-in and a unique per-call approval key.",
+    "output": "Actual provider API results through local MCP tools"
+  },
+  "providerDocs": "https://developer.todoist.com/api/v1/"
+}
