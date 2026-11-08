@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-todoist",
+      "description": "Connect AI agents to Todoist using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-todoist/SKILL.md": "c6f05837ba85cc9140d1635192aeb302d6c30292aa0638c763a680cfc070dbdd"
+  }
+}
